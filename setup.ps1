@@ -107,16 +107,10 @@ Write-Host "✅ requests 库安装完成。`n" -ForegroundColor Green
 Write-Host "正在自动创建 .gitignore 保护隐私..." -ForegroundColor Green
 $GitignorePath = Join-Path $ScriptDir ".gitignore"
 $GitignoreContent = @"
-# 敏感配置文件
 config.json
 git_sync.ps1
-
-# Python 缓存
+git_sync.sh
 __pycache__/
-*.pyc
-
-# 运行结果
-ip.txt
 "@
 try {
     $GitignoreContent | Out-File -FilePath $GitignorePath -Encoding utf8 -Force
