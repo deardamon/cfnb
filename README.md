@@ -419,20 +419,21 @@ python3 main.py
 在项目根目录下打开终端（Windows 为 PowerShell，Linux 为终端），依次执行以下命令：
 
 ```bash
+# 1. 初始化 Git 仓库（如果尚未初始化）
 git init
 
-# 如果已存在 origin 则先删除，避免重复添加报错
+# 2. 关联远程仓库（将下面网址中的 你的用户名 和 仓库名 替换成你自己的）
 git remote remove origin 2>/dev/null
 git remote add origin https://github.com/你的用户名/仓库名.git
 
-# 查看当前默认分支名（通常为 master 或 main）
-git branch
-
-# 如果默认分支不是 main，可强制重命名为 main（可选，与推送脚本中的 $branch 变量保持一致即可）
-git branch -M main
+# 3. 拉取远程默认分支名，并切换到该分支（自动对齐，无需手动指定 main/master）
+git fetch origin
+git checkout -b temp-branch 2>/dev/null || git checkout main 2>/dev/null || git checkout master 2>/dev/null
+git branch -M $(git remote show origin | grep "HEAD branch" | cut -d " " -f5) 2>/dev/null || git branch -M main
 ```
 
-> 💡 如果您是通过 `git clone` 命令下载的本项目，则本地仓库已自动关联远程，无需执行上述命令，直接跳到第三步。
+> 💡 **如果你是通过网页下载的 ZIP 压缩包解压的**，必须执行以上全部命令。  
+> **如果你是用 `git clone` 命令下载的**，则本地仓库已自动关联远程，可以跳过这一步，直接进入第三步。
 
 ### 第三步：获取并填写 GitHub Token
 
