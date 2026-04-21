@@ -80,11 +80,11 @@
 ### 通用前置步骤
 
 1. **获取项目文件**  
-   通过 Git 克隆或直接下载 ZIP 压缩包并解压：
-   ```bash
-   # 克隆仓库（替换为你的仓库地址）
-   git clone https://github.com/你的用户名/仓库名.git
-   cd 仓库名
+   - **方式一（推荐）**：点击本仓库页面的绿色 `Code` 按钮 → `Download ZIP`，下载压缩包后解压到本地。  
+   - **方式二（熟悉 Git 的用户）**：使用命令行克隆仓库：
+     ```bash
+     git clone https://github.com/你的用户名/仓库名.git
+     cd 仓库名
 
 2. **配置各项令牌（见下一节）**  
    根据需求获取并填写 GitHub Token、Cloudflare API Token 和 WxPusher 凭证。
