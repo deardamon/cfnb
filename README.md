@@ -257,7 +257,7 @@ python3 main.py
 
 > **说明**：  
 > - 该过滤**仅作用于 Cloudflare DNS 批量更新环节**，不会影响 `ip.txt` 的内容和 GitHub 推送。  
-> - DNS 更新过滤顺序：**端口 443 → 出站延迟阈值 → IPv6 落地 → 屏蔽国家**。
+> - DNS 更新过滤顺序：**端口 443 → IPv6 落地 → 屏蔽国家**。
 
 ### 微信通知（WxPusher）参数
 
@@ -311,8 +311,6 @@ python3 main.py
 | `AVAILABILITY_CONNECT_TIMEOUT` | `int` | `5` | 可用性 API 连接超时（秒） |
 | `AVAILABILITY_RETRY_MAX` | `int` | `2` | 可用性检测最大重试轮数 |
 | `AVAILABILITY_RETRY_DELAY` | `int` | `5` | 可用性检测重试间隔（秒） |
-| `AVAILABILITY_PROBES` | `int` | `3` | 每个节点可用性检测的 API 请求次数，取最小延迟对应的协议栈结果 |
-| `AVAILABILITY_MAX_DELAY_THRESHOLD` | `int` | `10` | **仅作用于 DNS**：出站延迟阈值（毫秒），高于此值的节点不写入 DNS（0 表示不启用） |
 | `FILTER_IPV6_AVAILABILITY` | `boolean` | `true` | **仅作用于 DNS**：是否过滤落地仅 IPv6 的节点（`ipv6_only`） |
 
 > 💡 IPv6 过滤逻辑：通过 API 返回的 `inferred_stack` 判断，仅淘汰 `ipv6_only` 节点，保留 `ipv4_only` 和 `dual_stack` 节点。
@@ -365,7 +363,6 @@ python3 main.py
 > 💡 **快速配置建议**  
 > - 通常只需修改 `ALLOWED_COUNTRIES`、`WXPUSHER_APP_TOKEN`、`WXPUSHER_UIDS`。  
 > - 启用 DNS 更新需正确填写 `CF_API_TOKEN`、`CF_ZONE_ID`、`CF_DNS_RECORD_NAME`。  
-> - 若希望 DNS 记录只保留出站延迟较低的节点，可设置 `AVAILABILITY_MAX_DELAY_THRESHOLD`（如 `50`）。  
 > - 网络不稳定时可 ↑ `TCP_PROBES` / `TIMEOUT`，↓ `MIN_SUCCESS_RATE` / `MAX_WORKERS`。  
 > - 希望更快出结果可 ↓ `BANDWIDTH_CANDIDATES` 或 `BANDWIDTH_SIZE_MB`。
 

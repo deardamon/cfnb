@@ -100,12 +100,6 @@
     "AVAILABILITY_RETRY_DELAY": 5,
     "_comment_AVAILABILITY_RETRY_DELAY": "可用性检测重试间隔（秒）",
 
-    "AVAILABILITY_PROBES": 3,
-    "_comment_AVAILABILITY_PROBES": "每个节点可用性检测的 API 请求次数，取最小 connect_ms 对应的协议栈结果",
-
-    "AVAILABILITY_MAX_DELAY_THRESHOLD": 10,
-    "_comment_AVAILABILITY_MAX_DELAY_THRESHOLD": "可用性检测最大延迟阈值（毫秒），高于此值则不写入 DNS（0 表示不启用）",
-
     "FILTER_IPV6_AVAILABILITY": true,
     "_comment_FILTER_IPV6_AVAILABILITY": "【仅DNS】是否过滤落地为 IPv6 的节点",
 
