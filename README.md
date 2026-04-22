@@ -36,11 +36,11 @@
 | :--- | :--- |
 | 🌐 **多模式筛选** | 全局最优 TopN / 分国家最优 TopN |
 | ⚡ **TCP 连接测试** | 并发测延迟，可设成功率阈值 |
-| 🔍 **可用性二次检测** | 调用 API 验证代理能力，记录落地 IP |
-| 📶 **真实带宽测速** | curl 下载测速文件，实测吞吐量 |
-| 🛡️ **IP 纯净度过滤** | 过滤滥用评分非 Low 的 IP |
-| 🌍 **国家过滤前置** | TCP 测试前即过滤指定国家节点 |
-| ☁️ **Cloudflare DNS 更新** | 批量替换同名 A 记录，仅保留落地 IPv4 |
+| 🔍 **可用性二次检测** | API 验证代理能力 |
+| 📶 **真实带宽测速** | curl 下载测速，实测吞吐量 |
+| 🛡️ **IP 纯净度过滤** | 过滤滥用 IP |
+| 🌍 **国家过滤前置** | TCP 测试前即过滤指定国家 |
+| ☁️ **Cloudflare DNS 更新** | 批量替换同名 A 记录 |
 | 📬 **微信实时通知** | 集成 WxPusher，异常/结果推送 |
 | 🔄 **定时自动运行** | Windows 计划任务 / Linux cron，每 15 分钟 |
 | 🚀 **一键部署** | `setup.ps1` / `setup.sh` 自动安装依赖并配置 |
@@ -85,23 +85,26 @@
      ```bash
      git clone https://github.com/你的用户名/仓库名.git
      cd 仓库名
+     ```
 
 2. **配置各项令牌（见下一节）**  
    根据需求获取并填写 GitHub Token、Cloudflare API Token 和 WxPusher 凭证。
+
+> 💡 部署脚本会自动安装依赖、创建 `.gitignore` 并配置定时任务（每 15 分钟整点运行）。
 
 ---
 
 ### 🔐 获取必要令牌（重要）
 
-若您希望启用 GitHub 自动推送、Cloudflare DNS 更新或微信通知，请参考下表获取对应令牌。
+若你希望启用 GitHub 自动推送、Cloudflare DNS 更新或微信通知，请参考下表获取对应令牌。
 
 | GitHub Personal Access Token | Cloudflare API Token | WxPusher 微信通知 |
 | :---: | :---: | :---: |
 | **1.** 登录 GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic) | **1.** 登录 Cloudflare → My Profile → API Tokens → Create Token → Create Custom Token | **1.** 访问 [WxPusher 后台](http://wxpusher.zjiecode.com/admin/)，微信扫码登录 |
 | **2.** Generate new token (classic)，Note 任意填 | **2.** Token name 任意；Permissions: `Zone` → `DNS` → `Edit`；Zone Resources: 选择你的域名 | **2.** 左侧菜单“应用管理”→“应用信息”→“新增应用”，填写名称后创建 |
 | **3.** **Expiration 必须选 `No expiration`** | **3.** 点击 Continue to summary → Create Token | **3.** 复制保存 **AppToken**（仅显示一次） |
-| **4.** Select scopes: 仅勾选 **repo**（自动勾全） | **4.** **立即复制保存 Token** | **4.** 左侧“关注应用”→微信扫码关注公众号 |
-| **5.** Generate token，**立即复制保存** | **5.** Zone ID 在域名概览页右侧“API”栏目复制 | **5.** 公众号菜单“我的”→“我的UID”获取 UID |
+| **4.** Select scopes: 仅勾选 **repo**（自动勾全） | **4.** **保存 Token** | **4.** 左侧“关注应用”→微信扫码关注公众号 |
+| **5.** Generate token，**保存** | **5.** Zone ID 在域名概览页右侧“API”栏目复制 | **5.** 公众号菜单“我的”→“我的UID”获取 UID |
 | 填入 `git_sync.ps1` / `git_sync.sh` 的 `github_token` | 填入 `config.json` 的 `CF_API_TOKEN` 和 `CF_ZONE_ID` | 填入 `config.json` 的 `WXPUSHER_APP_TOKEN` 和 `WXPUSHER_UIDS` |
 
 > 💡 若不需要某项功能，可跳过对应步骤或在配置中关闭开关：  
@@ -132,8 +135,6 @@ notepad git_sync.ps1
 python main.py
 ```
 
-脚本会自动安装依赖、创建 .gitignore 并配置计划任务（下个整15分开始，无限期重复）。
-
 ### Linux 部署
 
 在终端中逐行执行以下命令：
@@ -154,8 +155,6 @@ nano git_sync.sh
 # 5. 测试运行
 python3 main.py
 ```
-
-脚本会自动安装依赖、创建 .gitignore 并配置 cron 定时任务（整点15分对齐）。
 
 <details>
 <summary>📝 手动部署详细步骤（点击展开）</summary>
@@ -361,7 +360,7 @@ python3 main.py
 > `104.16.x.x:443#US`  
 > `162.159.x.x:443#HK`
 
-若您已配置 GitHub 自动同步，该文件将自动推送至远程仓库，订阅链接请参考 [配置 GitHub 自动同步](#-配置-github-自动同步) 章节末尾。
+若你已配置 GitHub 自动同步，该文件将自动推送至远程仓库，订阅链接请参考 [配置 GitHub 自动同步](#-配置-github-自动同步) 章节末尾。
 
 ---
 
@@ -372,11 +371,11 @@ python3 main.py
 ### 第一步：获取 Cloudflare API Token 与 Zone ID
 
 1. 按照 [获取必要令牌](#-获取必要令牌重要) 中的步骤获取 **Cloudflare API Token**（需具有 Zone:DNS:Edit 权限）。
-2. 在 Cloudflare 域名概览页面右侧复制您的 **Zone ID**。
+2. 在 Cloudflare 域名概览页面右侧复制你的 **Zone ID**。
 
 ### 第二步：填写配置文件
 
-编辑 `config.json`，找到 Cloudflare DNS 配置部分，填入您的信息：
+编辑 `config.json`，找到 Cloudflare DNS 配置部分，填入你的信息：
 
 ```json
 "CF_ENABLED": true,
@@ -421,7 +420,7 @@ python3 main.py
 
 ## 📤 配置 GitHub 自动同步
 
-本工具支持每次运行后将 `ip.txt` 自动推送到您指定的 GitHub 仓库，方便通过 Raw 链接订阅节点列表。
+本工具支持每次运行后将 `ip.txt` 自动推送到你指定的 GitHub 仓库，方便通过 Raw 链接订阅节点列表。
 
 ### 第一步：创建 GitHub 仓库
 
@@ -458,7 +457,7 @@ git branch -M $(git remote show origin | grep "HEAD branch" | cut -d " " -f5) 2>
 2. 编辑对应平台的推送脚本：
    - **Windows**：用文本编辑器打开 `git_sync.ps1`
    - **Linux**：用文本编辑器打开 `git_sync.sh`
-3. 将脚本开头部分的四个变量替换为您的真实信息：
+3. 将脚本开头部分的四个变量替换为你的真实信息：
 
    ```powershell
    # Windows (git_sync.ps1)
@@ -501,7 +500,7 @@ git branch -M $(git remote show origin | grep "HEAD branch" | cut -d " " -f5) 2>
 > [!WARNING]
 > **关于私有仓库的特别提醒**
 > 
-> 如果您将仓库设置为 **Private（私有）**，则通过 Raw 链接访问 `ip.txt` 时必须在 URL 后附加 `?token=你的令牌` 参数才能获取内容，例如：
+> 如果你将仓库设置为 **Private（私有）**，则通过 Raw 链接访问 `ip.txt` 时必须在 URL 后附加 `?token=你的令牌` 参数才能获取内容，例如：
 > ```
 > https://raw.githubusercontent.com/用户名/仓库名/分支名/ip.txt?token=xxxxxx
 > ```
@@ -510,7 +509,7 @@ git branch -M $(git remote show origin | grep "HEAD branch" | cut -d " " -f5) 2>
 > - 无法解析带查询参数的链接
 > - 防火墙或网络环境限制
 > 
-> **因此，如果您希望将 `ip.txt` 作为订阅链接供代理工具使用，强烈建议将仓库设为 Public（公开）。**
+> **因此，如果你希望将 `ip.txt` 作为订阅链接供代理工具使用，强烈建议将仓库设为 Public（公开）。**
 > 
 > 公开仓库的 Raw 链接无需 Token 即可访问，兼容性最佳：
 > ```
@@ -555,18 +554,18 @@ git branch -M $(git remote show origin | grep "HEAD branch" | cut -d " " -f5) 2>
    ```
 4. 点击 **“保存”** 按钮，即可手动指定优选的节点列表。
 
-### 方法三：使用 Cloudflare DNS 域名（最新功能）
+### 方法三：使用 Cloudflare DNS 域名（推荐）
 
-如果您已启用 Cloudflare DNS 批量更新，可以直接将您的子域名（如 `你的域名.dpdns.org`）填入 EdgeTunnel：
+如果你已启用 Cloudflare DNS 批量更新，可以直接将你的子域名（如 `cf.yourdomain.com`）填入 EdgeTunnel：
 
 **方式一：通过“优选订阅生成”**
 1. 打开 **“优选订阅生成”** 页面，选择 **“自定义订阅（支持汇聚订阅）”**。
-2. 在 **“自定义订阅地址”** 输入框中，填入您的子域名（例如 `你的域名.dpdns.org`）。
+2. 在 **“自定义订阅地址”** 输入框中，填入你的子域名（例如 `cf.yourdomain.com`）。
 3. 点击 **“保存”** 按钮。
 
 **方式二：通过“Cloudflare CDN 访问设置”**
 1. 进入 **“Cloudflare CDN 访问设置”** 页面。
-2. 在 **“PROXYIP”** 输入框中，填入您的子域名（例如 `你的域名.dpdns.org`）。
+2. 在 **“PROXYIP”** 输入框中，填入你的子域名（例如 `cf.yourdomain.com`）。
 3. 点击 **“保存”** 按钮。
 
 该域名会自动解析到当前最优的多个 IP 之一，实现零配置动态切换。
@@ -586,6 +585,28 @@ git branch -M $(git remote show origin | grep "HEAD branch" | cut -d " " -f5) 2>
 ---
 
 ## ❓ 常见问题
+
+<details>
+<summary>🌐 代理环境影响</summary>
+
+**会影响，尤其全局/TUN 模式。**
+
+| 测试阶段 | 是否走代理 | 说明 |
+| :--- | :--- | :--- |
+| TCP 延迟测试 (Socket) | ❌ 直连 | 反映本机到节点的 RTT |
+| 带宽测速 (curl) | ❌ 直连 | 反映本机到 CDN 的速度 |
+| API 请求类 (requests) | ✅ 跟随系统代理 | 获取节点、可用性、纯净度、微信通知等 |
+| Git 推送 (git) | ✅ 跟随系统代理 | 涉及 `github.com` 等 |
+
+**涉及域名：**  
+`cm.edu.kg` · `cmliussss.net` · `090227.xyz` · `cloudflare.com` · `zjiecode.com` · `github.com` · `githubusercontent.com` · `ipapi.is`
+
+**建议：**  
+1. 检查本机能否直连上述域名 → 能通设 `DIRECT`，不通设 `PROXY`  
+2. **运行程序时关闭全局模式 / TUN 模式**  
+3. 不确定网络情况就直接**退出代理工具再运行**
+
+</details>
 
 <details>
 <summary>🔌 依赖与安装</summary>
@@ -622,7 +643,7 @@ git branch -M $(git remote show origin | grep "HEAD branch" | cut -d " " -f5) 2>
    - 程序内置重试机制，全部失败时会通过微信通知（如已启用）。
 
 7. **为什么我的 DNS 记录数量少于 `GLOBAL_TOP_N`？**  
-   如果您启用了 `FILTER_IPV6_AVAILABILITY`，且候选池中落地 IPv4 的节点总数不足目标数量，则 DNS 只会更新实际可用的节点数。这是正常现象，您可以通过增加 `BANDWIDTH_CANDIDATES` 来扩大候选池。
+   如果你启用了 `FILTER_IPV6_AVAILABILITY`，且候选池中落地 IPv4 的节点总数不足目标数量，则 DNS 只会更新实际可用的节点数。这是正常现象，你可以通过增加 `BANDWIDTH_CANDIDATES` 来扩大候选池。
 
 </details>
 
@@ -639,28 +660,6 @@ git branch -M $(git remote show origin | grep "HEAD branch" | cut -d " " -f5) 2>
 
 9. **隐私保护**  
    自动生成的 `.gitignore` 文件会忽略 `config.json`、`git_sync.ps1` 和 `git_sync.sh`，防止敏感信息被提交到公开仓库。
-
-</details>
-
-<details>
-<summary>🌐 代理环境影响</summary>
-
-**会影响，尤其全局/TUN 模式。**
-
-| 测试阶段 | 是否走代理 | 说明 |
-| :--- | :--- | :--- |
-| TCP 延迟测试 (Socket) | ❌ 直连 | 反映本机到节点的 RTT |
-| 带宽测速 (curl) | ❌ 直连 | 反映本机到 CDN 的速度 |
-| API 请求类 (requests) | ✅ 跟随系统代理 | 获取节点、可用性、纯净度、微信通知等 |
-| Git 推送 (git) | ✅ 跟随系统代理 | 涉及 `github.com` 等 |
-
-**涉及域名：**  
-`cm.edu.kg` · `cmliussss.net` · `090227.xyz` · `cloudflare.com` · `zjiecode.com` · `github.com` · `githubusercontent.com` · `ipapi.is`
-
-**建议：**  
-1. 检查本机能否直连上述域名 → 能通设 `DIRECT`，不通设 `PROXY`  
-2. **运行程序时关闭全局模式 / TUN 模式**  
-3. 不确定网络情况就直接**退出代理工具再运行**
 
 </details>
 
